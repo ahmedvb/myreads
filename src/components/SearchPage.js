@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { search, getAll } from "../BooksAPI.js";
+import { search } from "../BooksAPI.js";
 import Book from "./Book.js";
 const SearchPage = ({ showSearchPage, setShowSearchpage }) => {
   const [SearchedWord, SetSearchedWord] = useState("");
@@ -11,7 +11,6 @@ const SearchPage = ({ showSearchPage, setShowSearchpage }) => {
   }, [SearchedWord]);
   const ToSearch = () => {
     if (SearchedWord.trim().length > 0) {
-      alert(`a word`);
       SetIsSearching(true);
       SetResults([]);
       SetNoResult(false);
@@ -28,30 +27,32 @@ const SearchPage = ({ showSearchPage, setShowSearchpage }) => {
         })
         .catch((e) => {
           SetNoResult(true);
+          SetIsSearching(false);
           SetResults([]);
-          alert(Results[5].imageLinks.smallThumbnail);
         });
     } else {
-      SetIsSearching(true);
+      SetIsSearching(false);
       SetResults([]);
       SetNoResult(false);
+      /*
       getAll().then((data) => {
         SetIsSearching(false);
         SetNoResult(false);
         if (data) SetResults(data);
         else SetResults([]);
       });
+*/
     }
   };
   return (
     <div className="search-books">
       <div className="search-books-bar">
-        <a
+        <button
           className="close-search"
           onClick={() => setShowSearchpage(!showSearchPage)}
         >
           Close
-        </a>
+        </button>
         <div className="search-books-input-wrapper">
           <input
             type="text"
@@ -65,28 +66,29 @@ const SearchPage = ({ showSearchPage, setShowSearchpage }) => {
       </div>
       <div className="search-books-results">
         {NoResult && (
-          <h4 style={{ textAlign: "center" }}>No Search Results Found</h4>
+          <h3 style={{ textAlign: "center", color: "#0000aa" }}>
+            No Search Results Found
+          </h3>
         )}
         {IsSearching && (
-          <h4 style={{ textAlign: "center" }}>Getting Data...</h4>
+          <h3 style={{ textAlign: "center", color: "red" }}>Getting Data...</h3>
         )}
         <ol className="books-grid">
           {Results !== undefined &&
             Results !== null &&
-            Results.map((b, i) => (
-              <Book
-                BackgroundImage={
-                  b !== undefined &&
-                  (b !== null) & (b.imageLinks.thumbnail != undefined) &&
-                  b.imageLinks.thumbnail != null
-                    ? b.imageLinks.thumbnail
-                    : ""
-                }
-                BookTitle={b.title}
-                BookAuthors={b.authors}
-                key={i}
-              />
-            ))}
+            Results.map((b, i) => {
+              let bg = "";
+              if (b.imageLinks)
+                if (b.imageLinks.thumbnail) bg = b.imageLinks.thumbnail;
+              return (
+                <Book
+                  BackgroundImage={bg}
+                  BookTitle={b.title}
+                  BookAuthors={b.authors}
+                  key={i}
+                />
+              );
+            })}
         </ol>
       </div>
     </div>
