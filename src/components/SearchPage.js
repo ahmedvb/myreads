@@ -18,6 +18,7 @@ const SearchPage = ({ showSearchPage, setShowSearchpage }) => {
         .then((data) => {
           SetIsSearching(false);
           if (!data.error) {
+            console.log(data[0]);
             SetNoResult(false);
             SetResults(data);
           } else {
