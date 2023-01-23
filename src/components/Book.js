@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 
-const Book = ({ BackgroundImage, BookShelf, BookTitle, BookAuthors }) => {
+const Book = ({
+  Id,
+  BackgroundImage,
+  BookShelf,
+  BookTitle,
+  BookAuthors,
+  UpdateShelf,
+}) => {
+  const [SelectedValue, SetSelectedValue] = useState(BookShelf);
   return (
     <li>
       <div className="book">
@@ -14,8 +22,11 @@ const Book = ({ BackgroundImage, BookShelf, BookTitle, BookAuthors }) => {
             }}
           ></div>
           <div className="book-shelf-changer">
-            <select>
-              <option value={BookShelf} disabled>
+            <select
+              defaultValue={SelectedValue}
+              onChange={(e) => UpdateShelf(Id, e.value)}
+            >
+              <option value="move" disabled>
                 Move to...
               </option>
               <option value="currentlyReading">Currently Reading</option>

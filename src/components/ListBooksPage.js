@@ -1,5 +1,6 @@
+//eslint-disable
 import { useEffect, useState, React } from "react";
-import { getAll } from "../BooksAPI.js";
+import { getAll, update } from "../BooksAPI.js";
 import Book from "./Book.js";
 
 const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
@@ -8,6 +9,17 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
   const [Results_currentlyReading, SetResults_currentlyReading] = useState([]);
   const [Results_wantToRead, SetResults_wantToRead] = useState([]);
   const [Results_read, SetResults_read] = useState([]);
+  const UpdateTheShelf = (id, shelf) => {
+    console.log(id);
+    const newResults = Results.map((b) => {
+      if (b.id === id) {
+        b.shelf = shelf;
+        update(b, shelf);
+      }
+      return b;
+    });
+    SetResults(newResults);
+  };
   useEffect(() => {
     getAll()
       .then((data) => {
@@ -21,7 +33,6 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
             Results.filter((book) => book.shelf === "wantToRead")
           );
           SetResults_read(Results.filter((book) => book.shelf === "read"));
-          console.log(Results_wantToRead[0]);
         }
       })
       .catch(() => {
@@ -49,15 +60,15 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
                     if (book.imageLinks.thumbnail)
                       bg = book.imageLinks.thumbnail;
                   return (
-                    <li>
-                      <Book
-                        BackgroundImage={bg}
-                        BookShelf={book.shelf}
-                        BookTitle={book.title}
-                        BookAuthors={book.authors}
-                        key={book.id}
-                      />
-                    </li>
+                    <Book
+                      Id={book.id}
+                      BackgroundImage={bg}
+                      BookShelf={book.shelf}
+                      BookTitle={book.title}
+                      BookAuthors={book.authors}
+                      key={book.id}
+                      UpdateShelf={UpdateTheShelf}
+                    />
                   );
                 })}
               </ol>
@@ -73,15 +84,15 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
                     if (book.imageLinks.thumbnail)
                       bg = book.imageLinks.thumbnail;
                   return (
-                    <li>
-                      <Book
-                        BackgroundImage={bg}
-                        BookShelf={book.shelf}
-                        BookTitle={book.title}
-                        BookAuthors={book.authors}
-                        key={book.id}
-                      />
-                    </li>
+                    <Book
+                      Id={book.id}
+                      BackgroundImage={bg}
+                      BookShelf={book.shelf}
+                      BookTitle={book.title}
+                      BookAuthors={book.authors}
+                      key={book.id}
+                      UpdateShelf={UpdateTheShelf}
+                    />
                   );
                 })}
               </ol>
@@ -97,15 +108,15 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
                     if (book.imageLinks.thumbnail)
                       bg = book.imageLinks.thumbnail;
                   return (
-                    <li>
-                      <Book
-                        BackgroundImage={bg}
-                        BookShelf={book.shelf}
-                        BookTitle={book.title}
-                        BookAuthors={book.authors}
-                        key={book.id}
-                      />
-                    </li>
+                    <Book
+                      Id={book.id}
+                      BackgroundImage={bg}
+                      BookShelf={book.shelf}
+                      BookTitle={book.title}
+                      BookAuthors={book.authors}
+                      key={book.id}
+                      UpdateShelf={UpdateTheShelf}
+                    />
                   );
                 })}
               </ol>
