@@ -9,22 +9,47 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
   const [Results_currentlyReading, SetResults_currentlyReading] = useState([]);
   const [Results_wantToRead, SetResults_wantToRead] = useState([]);
   const [Results_read, SetResults_read] = useState([]);
-  const UpdateTheShelf = (id, shelf) => {
-    console.log(id);
+  const UpdateTheShelf = (Book, shelf) => {
+    console.log(Book, shelf);
     const newResults = Results.map((b) => {
-      if (b.id === id) {
-        b.shelf = shelf;
-        update(b, shelf);
+      if (b.id === Book.id) {
+        Book.shelf = shelf;
+        SetIsSearching(true);
+        /*
+        update(Book, shelf)
+          .then((data) => {
+            SetIsSearching(false);
+            if (data) {
+              SetResults(data);
+              SetResults_currentlyReading(
+                Results.filter((book) => book.shelf === "currentlyReading")
+              );
+              SetResults_wantToRead(
+                Results.filter((book) => book.shelf === "wantToRead")
+              );
+              SetResults_read(Results.filter((book) => book.shelf === "read"));
+            }
+          })
+          .catch(() => {
+            SetIsSearching(false);
+          });
+*/
+        return Book;
+      } else {
+        //update(Book, shelf);
+        return b;
       }
-      return b;
     });
     SetResults(newResults);
   };
   useEffect(() => {
+    //const controller = new AbortController();
+    //const signal = controller.signal;
     getAll()
       .then((data) => {
         SetIsSearching(false);
         if (data) {
+          //console.log(data[0]);
           SetResults(data);
           SetResults_currentlyReading(
             Results.filter((book) => book.shelf === "currentlyReading")
@@ -39,6 +64,7 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
         SetIsSearching(false);
         SetResults([]);
       });
+    //return () => controller.abort();
   }, [Results, Results_currentlyReading, Results_wantToRead, Results_read]);
   return (
     <div className="list-books">
@@ -55,17 +81,9 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
             <div className="bookshelf-books">
               <ol className="books-grid">
                 {Results_currentlyReading.map((book) => {
-                  let bg = "";
-                  if (book.imageLinks)
-                    if (book.imageLinks.thumbnail)
-                      bg = book.imageLinks.thumbnail;
                   return (
                     <Book
-                      Id={book.id}
-                      BackgroundImage={bg}
-                      BookShelf={book.shelf}
-                      BookTitle={book.title}
-                      BookAuthors={book.authors}
+                      Book={book}
                       key={book.id}
                       UpdateShelf={UpdateTheShelf}
                     />
@@ -78,18 +96,10 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
             <h2 className="bookshelf-title">Want to Read</h2>
             <div className="bookshelf-books">
               <ol className="books-grid">
-                {Results_wantToRead.map((book, i) => {
-                  let bg = "";
-                  if (book.imageLinks)
-                    if (book.imageLinks.thumbnail)
-                      bg = book.imageLinks.thumbnail;
+                {Results_wantToRead.map((book) => {
                   return (
                     <Book
-                      Id={book.id}
-                      BackgroundImage={bg}
-                      BookShelf={book.shelf}
-                      BookTitle={book.title}
-                      BookAuthors={book.authors}
+                      Book={book}
                       key={book.id}
                       UpdateShelf={UpdateTheShelf}
                     />
@@ -102,18 +112,10 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
             <h2 className="bookshelf-title">Read</h2>
             <div className="bookshelf-books">
               <ol className="books-grid">
-                {Results_read.map((book, i) => {
-                  let bg = "";
-                  if (book.imageLinks)
-                    if (book.imageLinks.thumbnail)
-                      bg = book.imageLinks.thumbnail;
+                {Results_read.map((book) => {
                   return (
                     <Book
-                      Id={book.id}
-                      BackgroundImage={bg}
-                      BookShelf={book.shelf}
-                      BookTitle={book.title}
-                      BookAuthors={book.authors}
+                      Book={book}
                       key={book.id}
                       UpdateShelf={UpdateTheShelf}
                     />
@@ -125,7 +127,9 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
         </div>
       </div>
       <div className="open-search">
-        <a onClick={() => setShowSearchpage(!showSearchPage)}>Add a book</a>
+        <a onClick={() => setShowSearchpage(!showSearchPage)} href="a">
+          Add a book
+        </a>
       </div>
     </div>
   );

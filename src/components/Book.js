@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 
 const Book = ({
-  Id,
-  BackgroundImage,
-  BookShelf,
-  BookTitle,
-  BookAuthors,
+  //Id,
+  //BackgroundImage,
+  //BookShelf,
+  //BookTitle,
+  //BookAuthors,
+  Book,
   UpdateShelf,
 }) => {
-  const [SelectedValue, SetSelectedValue] = useState(BookShelf);
+  //const [SelectedValue, SetSelectedValue] = useState(Book.BookShelf);
+  //console.log("the book is : ", Book);
+  let bg = "";
+  if (Book.imageLinks)
+    if (Book.imageLinks.thumbnail) bg = Book.imageLinks.thumbnail;
   return (
     <li>
       <div className="book">
@@ -18,13 +23,13 @@ const Book = ({
             style={{
               width: 128,
               height: 193,
-              backgroundImage: `url(${BackgroundImage})`,
+              backgroundImage: `url(${bg})`,
             }}
           ></div>
           <div className="book-shelf-changer">
             <select
-              defaultValue={SelectedValue}
-              onChange={(e) => UpdateShelf(Id, e.value)}
+              defaultValue={Book.shelf}
+              onChange={(e) => UpdateShelf(Book, e.target.value)}
             >
               <option value="move" disabled>
                 Move to...
@@ -36,8 +41,8 @@ const Book = ({
             </select>
           </div>
         </div>
-        <div className="book-title">{BookTitle}</div>
-        <div className="book-authors">{BookAuthors}</div>
+        <div className="book-title">{Book.title}</div>
+        <div className="book-authors">{Book.authors}</div>
       </div>
     </li>
   );
