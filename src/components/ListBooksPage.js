@@ -1,21 +1,28 @@
 //eslint-disable
 import { useEffect, useState, React } from "react";
-import { getAll, update } from "../BooksAPI.js";
+//import { getAll } from "../BooksAPI.js";
 import Book from "./Book.js";
 
-const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
-  const [IsSearching, SetIsSearching] = useState(true);
-  const [Results, SetResults] = useState([]);
+const ListBooksPage = ({
+  showSearchPage,
+  setShowSearchpage,
+  Results,
+  UpdateShelf,
+  IsSearching,
+}) => {
+  //const [IsSearching, SetIsSearching] = useState(true);
+  //const [Results, SetResults] = useState([]);
   const [Results_currentlyReading, SetResults_currentlyReading] = useState([]);
   const [Results_wantToRead, SetResults_wantToRead] = useState([]);
   const [Results_read, SetResults_read] = useState([]);
   const UpdateTheShelf = (Book, shelf) => {
-    console.log(Book, shelf);
+    UpdateShelf(Book, shelf);
+    /*
     const newResults = Results.map((b) => {
       if (b.id === Book.id) {
         Book.shelf = shelf;
         SetIsSearching(true);
-        /*
+        
         update(Book, shelf)
           .then((data) => {
             SetIsSearching(false);
@@ -33,7 +40,7 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
           .catch(() => {
             SetIsSearching(false);
           });
-*/
+
         return Book;
       } else {
         //update(Book, shelf);
@@ -41,15 +48,23 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
       }
     });
     SetResults(newResults);
+    */
   };
   useEffect(() => {
+    SetResults_currentlyReading(
+      Results.filter((book) => book.shelf === "currentlyReading")
+    );
+    SetResults_wantToRead(
+      Results.filter((book) => book.shelf === "wantToRead")
+    );
+    SetResults_read(Results.filter((book) => book.shelf === "read"));
     //const controller = new AbortController();
     //const signal = controller.signal;
+    /*
     getAll()
       .then((data) => {
         SetIsSearching(false);
         if (data) {
-          //console.log(data[0]);
           SetResults(data);
           SetResults_currentlyReading(
             Results.filter((book) => book.shelf === "currentlyReading")
@@ -64,8 +79,9 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
         SetIsSearching(false);
         SetResults([]);
       });
+      */
     //return () => controller.abort();
-  }, [Results, Results_currentlyReading, Results_wantToRead, Results_read]);
+  }, [Results]);
   return (
     <div className="list-books">
       {IsSearching && (
@@ -127,9 +143,7 @@ const ListBooksPage = ({ showSearchPage, setShowSearchpage }) => {
         </div>
       </div>
       <div className="open-search">
-        <a onClick={() => setShowSearchpage(!showSearchPage)} href="a">
-          Add a book
-        </a>
+        <a onClick={() => setShowSearchpage(!showSearchPage)}>Add a book</a>
       </div>
     </div>
   );
